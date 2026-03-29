@@ -1,0 +1,299 @@
+{
+  "run_at": "2026-03-29T01:45:27.8824068+01:00",
+  "libraries": [
+    {
+      "name": "AutoMapper",
+      "version": "16.1.1",
+      "cases": [
+        {
+          "name": "SimpleFlat",
+          "mean_us": 0.11,
+          "median_us": 0.1,
+          "p95_us": 0.1,
+          "p99_us": 0.2,
+          "stddev_us": 0.1,
+          "alloc_bytes": 88
+        },
+        {
+          "name": "NestedObject",
+          "mean_us": 0.22,
+          "median_us": 0.2,
+          "p95_us": 0.2,
+          "p99_us": 0.8,
+          "stddev_us": 0.1,
+          "alloc_bytes": 216
+        },
+        {
+          "name": "Collection",
+          "mean_us": 11.95,
+          "median_us": 11.85,
+          "p95_us": 20.7,
+          "p99_us": 28.1,
+          "stddev_us": 5.01,
+          "alloc_bytes": 10992
+        },
+        {
+          "name": "NameDifference",
+          "mean_us": 0.15,
+          "median_us": 0.1,
+          "p95_us": 0.1,
+          "p99_us": 0.1,
+          "stddev_us": 0.5,
+          "alloc_bytes": 56
+        }
+      ]
+    },
+    {
+      "name": "Mapperly",
+      "version": "4.3.1",
+      "cases": [
+        {
+          "name": "SimpleFlat",
+          "mean_us": 0,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0,
+          "alloc_bytes": 88
+        },
+        {
+          "name": "NestedObject",
+          "mean_us": 0.08,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 2.6,
+          "stddev_us": 0.55,
+          "alloc_bytes": 176
+        },
+        {
+          "name": "Collection",
+          "mean_us": 9.56,
+          "median_us": 6.9,
+          "p95_us": 17.6,
+          "p99_us": 31.7,
+          "stddev_us": 5.44,
+          "alloc_bytes": 9656
+        },
+        {
+          "name": "NameDifference",
+          "mean_us": 0,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0,
+          "alloc_bytes": 56
+        }
+      ]
+    },
+    {
+      "name": "Mapster",
+      "version": "10.0.0",
+      "cases": [
+        {
+          "name": "SimpleFlat",
+          "mean_us": 0.12,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 4.7,
+          "stddev_us": 0.88,
+          "alloc_bytes": 88
+        },
+        {
+          "name": "NestedObject",
+          "mean_us": 0.13,
+          "median_us": 0,
+          "p95_us": 0.1,
+          "p99_us": 4.8,
+          "stddev_us": 0.72,
+          "alloc_bytes": 216
+        },
+        {
+          "name": "Collection",
+          "mean_us": 10.47,
+          "median_us": 8.8,
+          "p95_us": 19.9,
+          "p99_us": 33.7,
+          "stddev_us": 7.16,
+          "alloc_bytes": 9656
+        },
+        {
+          "name": "NameDifference",
+          "mean_us": 0.05,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0.51,
+          "alloc_bytes": 56
+        }
+      ]
+    },
+    {
+      "name": "TinyMapper",
+      "version": "3.0.2-beta",
+      "cases": [
+        {
+          "name": "SimpleFlat",
+          "mean_us": 0.06,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0.1,
+          "stddev_us": 0.54,
+          "alloc_bytes": 88
+        },
+        {
+          "name": "NestedObject",
+          "mean_us": 0.06,
+          "median_us": 0,
+          "p95_us": 0.1,
+          "p99_us": 0.1,
+          "stddev_us": 0.51,
+          "alloc_bytes": 112
+        },
+        {
+          "name": "Collection",
+          "mean_us": 12.22,
+          "median_us": 10.6,
+          "p95_us": 22,
+          "p99_us": 31.2,
+          "stddev_us": 6.65,
+          "alloc_bytes": 9656
+        },
+        {
+          "name": "NameDifference",
+          "mean_us": 0.25,
+          "median_us": 0,
+          "p95_us": 0.1,
+          "p99_us": 0.2,
+          "stddev_us": 2.33,
+          "alloc_bytes": 56
+        }
+      ]
+    },
+    {
+      "name": "AgileMapper",
+      "version": "1.8.1",
+      "cases": [
+        {
+          "name": "SimpleFlat",
+          "mean_us": 1.21,
+          "median_us": 0.7,
+          "p95_us": 2.4,
+          "p99_us": 10.6,
+          "stddev_us": 2.33,
+          "alloc_bytes": 352
+        },
+        {
+          "name": "NestedObject",
+          "mean_us": 1,
+          "median_us": 0.6,
+          "p95_us": 1.3,
+          "p99_us": 7.9,
+          "stddev_us": 2.08,
+          "alloc_bytes": 376
+        },
+        {
+          "name": "Collection",
+          "mean_us": 10.51,
+          "median_us": 8.15,
+          "p95_us": 19.7,
+          "p99_us": 27.4,
+          "stddev_us": 4.52,
+          "alloc_bytes": 9920
+        },
+        {
+          "name": "NameDifference",
+          "mean_us": 0.97,
+          "median_us": 0.7,
+          "p95_us": 0.8,
+          "p99_us": 5.9,
+          "stddev_us": 1.11,
+          "alloc_bytes": 320
+        }
+      ]
+    },
+    {
+      "name": "Manual (LINQ)",
+      "version": ".NET 10.0.4",
+      "cases": [
+        {
+          "name": "SimpleFlat",
+          "mean_us": 0.05,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0.48,
+          "alloc_bytes": 88
+        },
+        {
+          "name": "NestedObject",
+          "mean_us": 0,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0,
+          "alloc_bytes": 216
+        },
+        {
+          "name": "Collection",
+          "mean_us": 10.04,
+          "median_us": 8.9,
+          "p95_us": 18.8,
+          "p99_us": 21.9,
+          "stddev_us": 5.36,
+          "alloc_bytes": 9728
+        },
+        {
+          "name": "NameDifference",
+          "mean_us": 0.08,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0.76,
+          "alloc_bytes": 56
+        }
+      ]
+    },
+    {
+      "name": "Manual (foreach)",
+      "version": ".NET 10.0.4",
+      "cases": [
+        {
+          "name": "SimpleFlat",
+          "mean_us": 0.05,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0.48,
+          "alloc_bytes": 88
+        },
+        {
+          "name": "NestedObject",
+          "mean_us": 0.1,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0.98,
+          "alloc_bytes": 216
+        },
+        {
+          "name": "Collection",
+          "mean_us": 9.03,
+          "median_us": 6.75,
+          "p95_us": 14.2,
+          "p99_us": 20.6,
+          "stddev_us": 4.9,
+          "alloc_bytes": 9656
+        },
+        {
+          "name": "NameDifference",
+          "mean_us": 0,
+          "median_us": 0,
+          "p95_us": 0,
+          "p99_us": 0,
+          "stddev_us": 0,
+          "alloc_bytes": 56
+        }
+      ]
+    }
+  ]
+}

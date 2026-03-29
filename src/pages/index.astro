@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import BenchmarkCharts from '../components/BenchmarkCharts.astro';
+import Explanation from '../components/Explanation.astro';
+import Footer from '../components/Footer.astro';
+import ErrorFallback from '../components/ErrorFallback.astro';
+import type { BenchmarkData } from '../types';
+
+let data: BenchmarkData | null = null;
+let error: string | null = null;
+
+try {
+  const res = await fetch('https://cdn.jagoba.dev/dotnet-mapping-benchmarks/avg_results.json');
+  if (!res.ok) {
+    error = `HTTP ${res.status}`;
+  } else {
+    data = await res.json();
+  }
+} catch (e) {
+  error = e instanceof Error ? e.message : 'Failed to load benchmark data';
+}
+---
+
+<Layout title=".NET Mapper Benchmarks">
+  <main>
+    <Hero runAt={data?.run_at} />
+
+    {data ? (
+      <BenchmarkCharts data={data} />
+    ) : (
+      <ErrorFallback message={error} />
+    )}
+
+    <Explanation />
+  </main>
+  <Footer />
+</Layout>
