@@ -4,6 +4,7 @@ import node from '@astrojs/node';
 
 export default defineConfig({
   site: 'https://benchmarks.jagoba.dev',
+  base: '/dotnet-mappers',
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   vite: {

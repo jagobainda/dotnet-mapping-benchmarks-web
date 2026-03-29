@@ -47,8 +47,8 @@ import '../styles/global.css';
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonicalURL} />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
@@ -61,7 +61,7 @@ import '../styles/global.css';
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
 
-    <link rel="alternate" type="text/plain" title="LLM-friendly description" href="/llms.txt" />
+    <link rel="alternate" type="text/plain" title="LLM-friendly description" href={`${import.meta.env.BASE_URL}llms.txt`} />
 
     {schemas.map(schema => (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />
