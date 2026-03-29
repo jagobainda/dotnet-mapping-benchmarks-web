@@ -20,9 +20,42 @@ try {
 } catch (e) {
   error = e instanceof Error ? e.message : 'Failed to load benchmark data';
 }
+
+const datasetSchema = data
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Dataset',
+      name: '.NET Object Mapper Benchmark Results',
+      description:
+        'Performance benchmarks comparing .NET object mapping libraries including AutoMapper, Mapperly, Mapster, TinyMapper and AgileMapper. Metrics include mean execution time in microseconds (μs) and memory allocation in bytes per operation, averaged over the last 50 automated runs.',
+      url: 'https://benchmarks.jagoba.dev',
+      dateModified: data.run_at,
+      creator: {
+        '@type': 'Person',
+        name: 'Jagoba',
+        url: 'https://github.com/jagobainda',
+      },
+      keywords: ['.NET', 'C#', 'benchmark', 'AutoMapper', 'Mapperly', 'Mapster', 'object mapping', 'performance', 'BenchmarkDotNet'],
+      license: 'https://opensource.org/licenses/MIT',
+      isAccessibleForFree: true,
+      distribution: {
+        '@type': 'DataDownload',
+        encodingFormat: 'application/json',
+        contentUrl: 'https://cdn.jagoba.dev/dotnet-mapping-benchmarks/avg_results.json',
+      },
+      variableMeasured: data.libraries.flatMap(lib =>
+        lib.cases.map(c => ({
+          '@type': 'PropertyValue',
+          name: `${lib.name} — ${c.name} mean time`,
+          value: c.mean_us,
+          unitText: 'microseconds',
+        }))
+      ),
+    }
+  : null;
 ---
 
-<Layout title=".NET Mapper Benchmarks">
+<Layout jsonLd={datasetSchema ?? undefined}>
   <main>
     <Hero runAt={data?.run_at} />
 

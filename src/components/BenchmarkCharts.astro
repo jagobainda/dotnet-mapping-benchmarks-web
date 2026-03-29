@@ -19,7 +19,7 @@ const LIBRARY_COLORS: Record<string, string> = {
   'Manual (foreach)':'#EC4899',
 };
 const HIDDEN_BY_DEFAULT = new Set(['AgileMapper']);
-const INACTIVE_TRACK = '#3f3f46'; // zinc-700
+const INACTIVE_TRACK = '#3f3f46';
 
 const getColor  = (name: string) => LIBRARY_COLORS[name] ?? '#a1a1aa';
 const isActive  = (name: string) => !HIDDEN_BY_DEFAULT.has(name);
@@ -42,7 +42,6 @@ const caseDescriptions: Record<string, string> = {
       Average of last 50 runs · Mean execution time in microseconds (μs) · Lower is better
     </p>
 
-    <!-- Library toggles -->
     <div class="flex flex-wrap gap-3 justify-center mb-10 p-5 bg-zinc-900/40 border border-zinc-800 rounded-xl">
       <p class="w-full text-center text-xs text-zinc-500 mb-1 uppercase tracking-widest">Libraries</p>
       {libraryNames.map(name => (
@@ -54,7 +53,6 @@ const caseDescriptions: Record<string, string> = {
             data-color={getColor(name)}
             checked={isActive(name) || undefined}
           />
-          <!-- track: color set inline so we can use per-library colors -->
           <span
             class="lib-track relative block w-10 h-5.5 rounded-full transition-colors duration-200"
             style={`background-color:${trackColor(name)}`}
@@ -66,7 +64,6 @@ const caseDescriptions: Record<string, string> = {
       ))}
     </div>
 
-    <!-- Charts grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {caseNames.map((caseName, i) => (
         <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-colors">
@@ -81,12 +78,46 @@ const caseDescriptions: Record<string, string> = {
       ))}
     </div>
 
-    <!-- Memory Allocation Table -->
     <div class="mt-10 bg-zinc-900/60 border border-zinc-800 rounded-xl p-6">
+      <h3 class="text-lg font-semibold text-white mb-1">Mean Execution Time</h3>
+      <p class="text-sm text-zinc-500 mb-4">Microseconds (μs) per operation · lower is better · average of last 50 runs</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm" aria-label="Mean execution time in microseconds per library and scenario">
+          <thead>
+            <tr class="border-b border-zinc-700 text-zinc-400">
+              <th class="text-left py-2.5 px-3 font-medium">Library</th>
+              <th class="text-left py-2.5 px-3 font-medium">Version</th>
+              {caseNames.map(cn => (
+                <th class="text-right py-2.5 px-3 font-medium">{cn} (μs)</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.libraries.map(lib => (
+              <tr
+                class="border-b border-zinc-800/60 hover:bg-zinc-800/30 transition-all duration-200"
+                data-lib-row={lib.name}
+                style={HIDDEN_BY_DEFAULT.has(lib.name) ? 'opacity:0.2' : ''}
+              >
+                <td class="py-2.5 px-3 font-medium text-white">{lib.name}</td>
+                <td class="py-2.5 px-3 text-zinc-500 text-xs font-mono">{lib.version}</td>
+                {lib.cases.map(c => (
+                  <td class="text-right py-2.5 px-3 text-zinc-300 font-mono text-xs">
+                    {c.mean_us} μs
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-6 bg-zinc-900/60 border border-zinc-800 rounded-xl p-6">
       <h3 class="text-lg font-semibold text-white mb-1">Memory Allocation</h3>
       <p class="text-sm text-zinc-500 mb-4">Bytes allocated per operation</p>
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full text-sm" aria-label="Memory allocation in bytes per library and scenario">
           <thead>
             <tr class="border-b border-zinc-700 text-zinc-400">
               <th class="text-left py-2.5 px-3 font-medium">Library</th>
@@ -140,7 +171,7 @@ const caseDescriptions: Record<string, string> = {
     'Manual (LINQ)':   '#06B6D4',
     'Manual (foreach)':'#EC4899',
   };
-  const INACTIVE_TRACK = '#3f3f46'; // zinc-700
+  const INACTIVE_TRACK = '#3f3f46';
 
   const colorMap: Record<string, string> = {};
   libraryNames.forEach(name => { colorMap[name] = COLORS[name] ?? '#a1a1aa'; });
@@ -170,7 +201,6 @@ const caseDescriptions: Record<string, string> = {
     chart.update('active');
   }
 
-  // Init charts
   caseNames.forEach((caseName, i) => {
     const canvas = document.getElementById(`chart-${i}`) as HTMLCanvasElement | null;
     if (!canvas) return;
@@ -223,7 +253,6 @@ const caseDescriptions: Record<string, string> = {
     }));
   });
 
-  // Toggle listeners
   document.querySelectorAll<HTMLInputElement>('input[data-library]').forEach(input => {
     const lib      = input.getAttribute('data-library')!;
     const libColor = input.getAttribute('data-color') ?? INACTIVE_TRACK;
@@ -232,16 +261,12 @@ const caseDescriptions: Record<string, string> = {
     input.addEventListener('change', () => {
       input.checked ? visible.add(lib) : visible.delete(lib);
 
-      // Update switch track color
       if (track) track.style.backgroundColor = input.checked ? libColor : INACTIVE_TRACK;
 
-      // Dim table row
       const row = document.querySelector<HTMLElement>(`[data-lib-row="${lib}"]`);
       if (row) row.style.opacity = input.checked ? '1' : '0.2';
 
-      // Refresh all charts
       caseNames.forEach((caseName, i) => refreshChart(i, caseName));
     });
   });
 </script>
-
