@@ -18,5 +18,8 @@
     "chart.js": "^4.5.1",
     "lucide-astro": "^0.556.0",
     "tailwindcss": "^4.2.2"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
   }
 }
