@@ -1,4 +1,6 @@
 ---
+import { ArrowUpRight } from 'lucide-astro';
+
 const { runAt } = Astro.props;
 
 const formattedDate = runAt
@@ -47,9 +49,10 @@ const formattedDate = runAt
         href="https://github.com/jagobainda/DotnetMappingBenchmarks"
         target="_blank"
         rel="noopener noreferrer"
-        class="px-6 py-3 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-medium rounded-lg transition-colors"
+        class="inline-flex items-center gap-2 px-6 py-3 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-medium rounded-lg transition-colors"
       >
-        GitHub Repository ↗
+        GitHub Repo
+        <ArrowUpRight size={20} />
       </a>
     </div>
   </div>

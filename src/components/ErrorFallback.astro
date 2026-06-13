@@ -1,4 +1,6 @@
 ---
+import { TriangleAlert } from 'lucide-astro';
+
 interface Props {
   message?: string | null;
 }
@@ -8,7 +10,7 @@ const { message } = Astro.props;
 
 <section class="py-12 px-4">
   <div class="max-w-md mx-auto text-center bg-slate-900/40 border border-slate-800 rounded-xl p-8">
-    <div class="text-4xl mb-4">⚠️</div>
+    <div class="flex justify-center mb-4"><TriangleAlert size={20} /></div>
     <h2 class="text-xl font-semibold text-white mb-2">Data Unavailable</h2>
     <p class="text-slate-400 text-sm mb-6">
       {message || 'Benchmark data could not be loaded. The server might be temporarily unavailable.'}
