@@ -1,0 +1,7 @@
+# npm ecosystem
+
+/package.json @jagobainda /package-lock.json @jagobainda
+
+# github-actions ecosystem
+
+/.github/workflows/ @jagobainda
