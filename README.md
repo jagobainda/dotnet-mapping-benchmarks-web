@@ -4,7 +4,7 @@
 
 Live at **[benchmarks.jagoba.dev/dotnet-mappers](https://benchmarks.jagoba.dev/dotnet-mappers)**
 
-![Astro](https://img.shields.io/badge/Astro-6-BC52EE?logo=astro&logoColor=white)
+![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)
 ![Chart.js](https://img.shields.io/badge/Chart.js-4-FF6384?logo=chartdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
@@ -29,7 +29,7 @@ The site also exposes a [`/llms.txt`](https://benchmarks.jagoba.dev/dotnet-mappe
 
 | Layer | Choice | Why |
 |---|---|---|
-| Framework | [Astro 6](https://astro.build) (SSR) | Islands architecture, near-zero JS by default, excellent DX |
+| Framework | [Astro 7](https://astro.build) (SSR) | Islands architecture, near-zero JS by default, excellent DX |
 | Styling | [Tailwind CSS v4](https://tailwindcss.com) | Utility-first, no runtime overhead, v4 Vite plugin is fast |
 | Charts | [Chart.js 4](https://www.chartjs.org) | Lightweight, good canvas performance, easy to drive from vanilla JS |
 | Runtime | Node.js ≥ 22 (standalone adapter) | Simple deployment, single Node process |
@@ -46,7 +46,7 @@ npm run build     # production build
 npm run preview   # preview production build
 ```
 
-Benchmark data is read from `docs/benchmark_avg_example.json` (average) and `docs/benchmark_last_example.json` (last run).
+Benchmark data is fetched at runtime from `https://cdn.jagoba.dev/dotnet-mapping-benchmarks/avg_results.json` (average) and `https://cdn.jagoba.dev/dotnet-mapping-benchmarks/last_result.json` (last run). The local files in `docs/` are reference examples of the JSON shape.
 
 ---
 
