@@ -1,5 +1,7 @@
 ---
 import type { BenchmarkData } from '../types';
+import Panel from './Panel.astro';
+import SectionHeading from './SectionHeading.astro';
 
 interface Props {
   data: BenchmarkData;
@@ -9,21 +11,8 @@ const { data } = Astro.props;
 const caseNames = data.libraries[0].cases.map(c => c.name);
 const libraryNames = data.libraries.map(l => l.name);
 
-const LIBRARY_COLORS: Record<string, string> = {
-  'AutoMapper':      '#3B82F6',
-  'Mapperly':        '#10B981',
-  'Mapster':         '#F59E0B',
-  'TinyMapper':      '#8B5CF6',
-  'AgileMapper':     '#EF4444',
-  'Manual (LINQ)':   '#06B6D4',
-  'Manual (foreach)':'#EC4899',
-};
 const HIDDEN_BY_DEFAULT = new Set(['AgileMapper']);
-const INACTIVE_TRACK = '#3f3f46';
-
-const getColor  = (name: string) => LIBRARY_COLORS[name] ?? '#a1a1aa';
-const isActive  = (name: string) => !HIDDEN_BY_DEFAULT.has(name);
-const trackColor= (name: string) => isActive(name) ? getColor(name) : INACTIVE_TRACK;
+const isActive = (name: string) => !HIDDEN_BY_DEFAULT.has(name);
 
 const caseDescriptions: Record<string, string> = {
   SimpleFlat:     'Flat object with primitive properties',
@@ -33,119 +22,107 @@ const caseDescriptions: Record<string, string> = {
 };
 ---
 
-<section id="benchmarks" class="py-16 px-4">
+<section id="benchmarks" class="px-4 py-20 md:px-10">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-3">
-      Benchmark Results
-    </h2>
-    <p class="text-center text-zinc-400 mb-8">
-      Average of last 3 months · Mean execution time in microseconds (μs) · Lower is better
-    </p>
+    <SectionHeading
+      index="01"
+      title="Benchmark Results"
+      subtitle="Average of last 3 months · Mean execution time in microseconds (μs) · Lower is better"
+    />
 
-    <div class="flex flex-wrap gap-3 justify-center mb-10 p-5 bg-zinc-900/40 border border-zinc-800 rounded-xl">
-      <p class="w-full text-center text-xs text-zinc-500 mb-1 uppercase tracking-widest">Libraries</p>
-      {libraryNames.map(name => (
-        <label class="flex items-center gap-2.5 cursor-pointer select-none group">
-          <input
-            type="checkbox"
-            class="sr-only"
-            data-library={name}
-            data-color={getColor(name)}
-            checked={isActive(name) || undefined}
-          />
-          <span
-            class="lib-track relative block w-10 h-5.5 rounded-full transition-colors duration-200"
-            style={`background-color:${trackColor(name)}`}
-          >
-            <span class="absolute top-0.75 left-0.75 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 group-has-checked:translate-x-4.5"></span>
-          </span>
-          <span class="text-sm text-zinc-500 group-has-checked:text-zinc-100 transition-colors duration-200">{name}</span>
-        </label>
-      ))}
-    </div>
+    <Panel tag="Libraries" meta={`${libraryNames.length} LIBS · TOGGLE TO FILTER`} class="mb-10">
+      <div class="grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
+        {libraryNames.map(name => (
+          <label class="group flex items-center gap-2.5 cursor-pointer select-none">
+            <input type="checkbox" class="sr-only" data-library={name} checked={isActive(name) || undefined} />
+            <span class="relative block w-10 h-5 border-[1.4px] border-electric transition-colors duration-150 ease-hud group-has-checked:bg-electric group-has-focus-visible:outline-2 group-has-focus-visible:outline-offset-3 group-has-focus-visible:outline-electric">
+              <span class="absolute top-0.5 left-0.5 size-3.5 bg-electric transition-transform duration-150 ease-hud group-has-checked:translate-x-4.75 group-has-checked:bg-white"></span>
+            </span>
+            <span class="text-sm whitespace-nowrap text-ink/60 group-has-checked:text-ink transition-colors duration-150">{name}</span>
+          </label>
+        ))}
+      </div>
+    </Panel>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {caseNames.map((caseName, i) => (
-        <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-colors">
-          <div class="mb-4">
-            <h3 class="text-lg font-semibold text-white">{caseName}</h3>
-            <p class="text-sm text-zinc-500">{caseDescriptions[caseName] ?? ''}</p>
-          </div>
+        <Panel tag={caseName} meta={`CASE 0${i + 1} · μs`}>
+          <p class="text-sm text-ink/75 mb-4">{caseDescriptions[caseName] ?? ''}</p>
           <div class="h-56">
             <canvas id={`chart-${i}`}></canvas>
           </div>
-        </div>
+        </Panel>
       ))}
     </div>
 
-    <div class="mt-10 bg-zinc-900/60 border border-zinc-800 rounded-xl p-6">
-      <h3 class="text-lg font-semibold text-white mb-1">Mean Execution Time</h3>
-      <p class="text-sm text-zinc-500 mb-4">Microseconds (μs) per operation · lower is better · average of last 3 months</p>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm" aria-label="Mean execution time in microseconds per library and scenario">
-          <thead>
-            <tr class="border-b border-zinc-700 text-zinc-400">
-              <th class="text-left py-2.5 px-3 font-medium">Library</th>
-              <th class="text-left py-2.5 px-3 font-medium">Version</th>
-              {caseNames.map(cn => (
-                <th class="text-right py-2.5 px-3 font-medium">{cn} (μs)</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.libraries.map(lib => (
-              <tr
-                class="border-b border-zinc-800/60 hover:bg-zinc-800/30 transition-all duration-200"
-                data-lib-row={lib.name}
-                style={HIDDEN_BY_DEFAULT.has(lib.name) ? 'opacity:0.2' : ''}
-              >
-                <td class="py-2.5 px-3 font-medium text-white">{lib.name}</td>
-                <td class="py-2.5 px-3 text-zinc-500 text-xs font-mono">{lib.version}</td>
-                {lib.cases.map(c => (
-                  <td class="text-right py-2.5 px-3 text-zinc-300 font-mono text-xs">
-                    {c.mean_us} μs
-                  </td>
+    <div id="tables" class="scroll-mt-8">
+      <Panel tag="Mean Execution Time" meta="μs / op" class="mt-12">
+        <p class="text-sm text-ink/75 mb-4">Microseconds (μs) per operation · lower is better · average of last 3 months</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" aria-label="Mean execution time in microseconds per library and scenario">
+            <thead>
+              <tr class="border-b-[1.4px] border-electric text-electric text-xs uppercase tracking-wider">
+                <th class="text-left py-2.5 px-3 font-semibold">Library</th>
+                <th class="text-left py-2.5 px-3 font-semibold">Version</th>
+                {caseNames.map(cn => (
+                  <th class="text-right py-2.5 px-3 font-semibold">{cn} (μs)</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            </thead>
+            <tbody>
+              {data.libraries.map(lib => (
+                <tr
+                  class="border-b border-dashed border-electric/30 hover:bg-electric-pale/60 transition-all duration-150"
+                  data-lib-row={lib.name}
+                  style={HIDDEN_BY_DEFAULT.has(lib.name) ? 'opacity:0.2' : ''}
+                >
+                  <td class="py-2.5 px-3 font-extrabold">{lib.name}</td>
+                  <td class="py-2.5 px-3 text-ink/60 text-xs">{lib.version}</td>
+                  {lib.cases.map(c => (
+                    <td class="text-right py-2.5 px-3 text-xs">
+                      {c.mean_us} μs
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Panel>
 
-    <div class="mt-6 bg-zinc-900/60 border border-zinc-800 rounded-xl p-6">
-      <h3 class="text-lg font-semibold text-white mb-1">Memory Allocation</h3>
-      <p class="text-sm text-zinc-500 mb-4">Bytes allocated per operation</p>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm" aria-label="Memory allocation in bytes per library and scenario">
-          <thead>
-            <tr class="border-b border-zinc-700 text-zinc-400">
-              <th class="text-left py-2.5 px-3 font-medium">Library</th>
-              <th class="text-left py-2.5 px-3 font-medium">Version</th>
-              {caseNames.map(cn => (
-                <th class="text-right py-2.5 px-3 font-medium">{cn}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.libraries.map(lib => (
-              <tr
-                class="border-b border-zinc-800/60 hover:bg-zinc-800/30 transition-all duration-200"
-                data-lib-row={lib.name}
-                style={HIDDEN_BY_DEFAULT.has(lib.name) ? 'opacity:0.2' : ''}
-              >
-                <td class="py-2.5 px-3 font-medium text-white">{lib.name}</td>
-                <td class="py-2.5 px-3 text-zinc-500 text-xs font-mono">{lib.version}</td>
-                {lib.cases.map(c => (
-                  <td class="text-right py-2.5 px-3 text-zinc-300 font-mono text-xs">
-                    {c.alloc_bytes.toLocaleString()} B
-                  </td>
+      <Panel tag="Memory Allocation" meta="B / op" class="mt-8">
+        <p class="text-sm text-ink/75 mb-4">Bytes allocated per operation</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" aria-label="Memory allocation in bytes per library and scenario">
+            <thead>
+              <tr class="border-b-[1.4px] border-electric text-electric text-xs uppercase tracking-wider">
+                <th class="text-left py-2.5 px-3 font-semibold">Library</th>
+                <th class="text-left py-2.5 px-3 font-semibold">Version</th>
+                {caseNames.map(cn => (
+                  <th class="text-right py-2.5 px-3 font-semibold">{cn}</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {data.libraries.map(lib => (
+                <tr
+                  class="border-b border-dashed border-electric/30 hover:bg-electric-pale/60 transition-all duration-150"
+                  data-lib-row={lib.name}
+                  style={HIDDEN_BY_DEFAULT.has(lib.name) ? 'opacity:0.2' : ''}
+                >
+                  <td class="py-2.5 px-3 font-extrabold">{lib.name}</td>
+                  <td class="py-2.5 px-3 text-ink/60 text-xs">{lib.version}</td>
+                  {lib.cases.map(c => (
+                    <td class="text-right py-2.5 px-3 text-xs">
+                      {c.alloc_bytes.toLocaleString()} B
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Panel>
     </div>
   </div>
 </section>
@@ -162,19 +139,14 @@ const caseDescriptions: Record<string, string> = {
   const libraryNames: string[] = benchData.libraries.map((l: any) => l.name);
   const caseNames: string[] = benchData.libraries[0].cases.map((c: any) => c.name);
 
-  const COLORS: Record<string, string> = {
-    'AutoMapper':      '#3B82F6',
-    'Mapperly':        '#10B981',
-    'Mapster':         '#F59E0B',
-    'TinyMapper':      '#8B5CF6',
-    'AgileMapper':     '#EF4444',
-    'Manual (LINQ)':   '#06B6D4',
-    'Manual (foreach)':'#EC4899',
-  };
-  const INACTIVE_TRACK = '#3f3f46';
+  const rootStyle = getComputedStyle(document.documentElement);
+  const token = (name: string) => rootStyle.getPropertyValue(`--${name}`).trim();
+  const ELECTRIC = token('color-electric');
+  const INK = token('color-ink');
+  const DARK = matchMedia('(prefers-color-scheme: dark)').matches;
 
-  const colorMap: Record<string, string> = {};
-  libraryNames.forEach(name => { colorMap[name] = COLORS[name] ?? '#a1a1aa'; });
+  Chart.defaults.font.family = token('font-mono');
+  await document.fonts.ready;
 
   const HIDDEN_BY_DEFAULT = new Set(['AgileMapper']);
   const visible = new Set<string>(libraryNames.filter(n => !HIDDEN_BY_DEFAULT.has(n)));
@@ -185,7 +157,7 @@ const caseDescriptions: Record<string, string> = {
       .filter((lib: any) => visible.has(lib.name))
       .map((lib: any) => {
         const c = lib.cases.find((c: any) => c.name === caseName);
-        return { label: lib.name, value: c?.mean_us ?? 0, color: colorMap[lib.name] };
+        return { label: lib.name, value: c?.mean_us ?? 0 };
       })
       .sort((a: any, b: any) => a.value - b.value);
   }
@@ -196,9 +168,7 @@ const caseDescriptions: Record<string, string> = {
     const entries = getFilteredEntries(caseName);
     chart.data.labels = entries.map((e: any) => e.label);
     chart.data.datasets[0].data = entries.map((e: any) => e.value);
-    (chart.data.datasets[0] as any).backgroundColor = entries.map((e: any) => e.color + 'CC');
-    (chart.data.datasets[0] as any).borderColor = entries.map((e: any) => e.color);
-    chart.update('active');
+    chart.update();
   }
 
   caseNames.forEach((caseName, i) => {
@@ -212,39 +182,40 @@ const caseDescriptions: Record<string, string> = {
         labels: entries.map((e: any) => e.label),
         datasets: [{
           data: entries.map((e: any) => e.value),
-          backgroundColor: entries.map((e: any) => e.color + 'CC'),
-          borderColor: entries.map((e: any) => e.color),
-          borderWidth: 1,
-          borderRadius: 4,
-          barThickness: 22,
+          backgroundColor: ELECTRIC,
+          hoverBackgroundColor: INK,
+          borderWidth: 0,
+          barThickness: 18,
         }],
       },
       options: {
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        animation: { duration: 250 },
+        animation: { duration: 200 },
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: '#27272a',
-            titleColor: '#f4f4f5',
-            bodyColor: '#d4d4d8',
-            borderColor: '#3f3f46',
+            backgroundColor: '#000',
+            titleColor: '#fff',
+            bodyColor: token('color-lime'),
+            borderColor: token('color-lime'),
             borderWidth: 1,
+            cornerRadius: 0,
+            displayColors: false,
             padding: 10,
-            callbacks: { label: (ctx) => ` ${ctx.parsed.x} μs` },
+            callbacks: { label: (ctx) => `${ctx.parsed.x} μs` },
           },
         },
         scales: {
           x: {
-            title: { display: true, text: 'μs (lower is better)', color: '#71717a', font: { size: 11 } },
-            ticks: { color: '#71717a', font: { size: 11 } },
-            grid: { color: '#27272a' },
-            border: { color: '#3f3f46' },
+            title: { display: true, text: 'μs (lower is better)', color: ELECTRIC, font: { size: 11 } },
+            ticks: { color: DARK ? INK : ELECTRIC, font: { size: 11 } },
+            grid: { color: `${ELECTRIC}1A` },
+            border: { color: ELECTRIC },
           },
           y: {
-            ticks: { color: '#e4e4e7', font: { size: 12 } },
+            ticks: { color: INK, font: { size: 12 } },
             grid: { display: false },
             border: { display: false },
           },
@@ -254,17 +225,14 @@ const caseDescriptions: Record<string, string> = {
   });
 
   document.querySelectorAll<HTMLInputElement>('input[data-library]').forEach(input => {
-    const lib      = input.getAttribute('data-library')!;
-    const libColor = input.getAttribute('data-color') ?? INACTIVE_TRACK;
-    const track    = input.closest('label')?.querySelector<HTMLElement>('.lib-track');
+    const lib = input.getAttribute('data-library')!;
 
     input.addEventListener('change', () => {
       input.checked ? visible.add(lib) : visible.delete(lib);
 
-      if (track) track.style.backgroundColor = input.checked ? libColor : INACTIVE_TRACK;
-
-      const row = document.querySelector<HTMLElement>(`[data-lib-row="${lib}"]`);
-      if (row) row.style.opacity = input.checked ? '1' : '0.2';
+      document.querySelectorAll<HTMLElement>(`[data-lib-row="${lib}"]`).forEach(row => {
+        row.style.opacity = input.checked ? '1' : '0.2';
+      });
 
       caseNames.forEach((caseName, i) => refreshChart(i, caseName));
     });

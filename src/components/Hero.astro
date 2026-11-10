@@ -1,5 +1,12 @@
 ---
 import { ArrowUpRight } from 'lucide-astro';
+import Button from './Button.astro';
+import Glyph from './Glyph.astro';
+import HeroBackdrop from './HeroBackdrop.astro';
+
+interface Props {
+  runAt?: string;
+}
 
 const { runAt } = Astro.props;
 
@@ -12,51 +19,132 @@ const formattedDate = runAt
       minute: '2-digit',
     })
   : null;
+const transmission = runAt ? new Date(runAt).toISOString().slice(11, 19) : null;
+
+const nav = [
+  { label: 'results', href: '#benchmarks' },
+  { label: 'raw tables', href: '#tables' },
+  { label: 'how it works', href: '#how-it-works' },
+  { label: 'github', href: 'https://github.com/jagobainda/DotnetMappingBenchmarks', external: true },
+];
+
+let barX = 0;
+const barcode = [3, 1, 2, 1, 4, 1, 1, 2, 3, 1, 2, 2, 1, 3, 1, 1, 4, 2, 1, 1, 2, 3].flatMap((w, i) => {
+  const bar = { x: barX, width: w * 2 };
+  barX += w * 2 + 1;
+  return i % 2 ? [] : [bar];
+});
 ---
 
-<section class="relative overflow-hidden pt-24 pb-16 px-4">
-  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-zinc-700/20 via-zinc-950 to-zinc-950"></div>
+<section class="relative flex min-h-svh flex-col overflow-hidden px-4 pt-6 pb-16 md:px-10">
+  <HeroBackdrop />
 
-  <div class="relative max-w-4xl mx-auto text-center">
-    <div class="inline-flex items-center gap-2 pl-3 pr-4 py-1.5 rounded-md border-l-2 border-emerald-500 bg-zinc-800/60 text-sm text-zinc-300 mb-6">
-      Benchmarks running every hour
+  <nav aria-label="Sections" class="relative mx-auto w-full max-w-6xl">
+    <ul class="flex flex-wrap justify-end gap-x-8 gap-y-1 pl-36 text-sm md:pl-0">
+      {nav.map(({ label, href, external }, i) => (
+        <li>
+          <a
+            href={href}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer' : undefined}
+            class="group inline-flex gap-2 bg-ice/85 px-1 py-1"
+          >
+            <span class="text-electric">[0{i + 1}]</span>
+            <span class="px-0.5 transition-colors duration-150 ease-hud group-hover:bg-ink group-hover:text-white">
+              {label}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="relative m-auto grid w-full max-w-6xl gap-12 py-16 lg:grid-cols-[1fr_15rem]">
+    <div class="lg:order-last lg:pt-6">
+      <div class="w-fit border-[1.4px] border-electric bg-ice/80 p-3">
+        <p class="flex flex-col items-start gap-1.5 text-sm text-white">
+          <span class="bg-ink px-2 py-0.5">benchmarks running</span>
+          <span class="ml-10 bg-ink px-2 py-0.5">every hour<span class="text-lime">_</span></span>
+        </p>
+        {transmission && <p class="mt-3 text-xs text-electric">TX {transmission} UTC · BDN</p>}
+      </div>
+      <div aria-hidden="true" class="mt-8 hidden items-center gap-3 text-sm lg:flex">
+        <span>;B42</span>
+        <svg class="h-4 fill-ink" viewBox={`0 0 ${barX} 16`} style={`width:${barX}px`}>
+          {barcode.map(b => <rect x={b.x} width={b.width} height="16" />)}
+        </svg>
+      </div>
     </div>
 
-    <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-6">
-      <span class="bg-linear-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">.NET Mapper</span>
-      <br />Benchmarks
-    </h1>
+    <div>
+      <h1 class="font-display text-[clamp(2.75rem,10vw,6.75rem)] leading-display font-extrabold tracking-display lowercase">
+        <span class="flex items-center gap-[0.15em]"><Glyph kind="star" class="size-[0.45em] shrink-0" />.NET Mapper</span>
+        <span class="block pl-[12%]">
+          <span data-text="Benchmarks" class="echo relative inline-block text-transparent">Benchmarks</span>
+        </span>
+      </h1>
 
-    <p class="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-8">
-      Real-time performance comparison of popular .NET object mapping libraries.
-      Automated benchmarks with averaged results from the full history of the last 3 months.
-    </p>
+      <div class="mt-8 max-w-xl border-[1.4px] border-electric bg-ice/85 p-4">
+        <p class="text-sm leading-relaxed md:text-base">
+          Real-time performance comparison of popular .NET object mapping libraries. Automated benchmarks with averaged
+          results from the full history of the last 3 months.
+        </p>
 
-    {formattedDate && (
-      <p class="text-sm text-zinc-500">
-        Last updated: <time class="text-zinc-400">{formattedDate}</time>
-      </p>
-    )}
+        {formattedDate && (
+          <p class="mt-4 text-xs text-electric">
+            LAST UPDATED · <time datetime={runAt} class="text-ink">{formattedDate}</time>
+          </p>
+        )}
+      </div>
 
-    <div class="mt-8 flex justify-center gap-4">
-      <a
-        href="#benchmarks"
-        class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-colors"
-      >
-        View Results
-      </a>
-      <a
-        href="https://github.com/jagobainda/DotnetMappingBenchmarks"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 px-6 py-3 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-medium rounded-lg transition-colors"
-      >
-        GitHub Repo
-        <ArrowUpRight size={20} />
-      </a>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <Button href="#benchmarks">View Results <span aria-hidden="true">▸</span></Button>
+        <Button href="https://github.com/jagobainda/DotnetMappingBenchmarks" variant="secondary" external>
+          GitHub Repo <ArrowUpRight size={18} />
+        </Button>
+      </div>
     </div>
   </div>
 </section>
 
+<style>
+  .echo {
+    -webkit-text-stroke: 1.6px var(--color-ghost);
+  }
 
+  .echo::before,
+  .echo::after {
+    content: attr(data-text) / "";
+    position: absolute;
+    inset: 0;
+  }
 
+  .echo::before {
+    -webkit-text-stroke: 1.6px var(--color-glitch);
+    opacity: 0.35;
+    transform: translate(-3px, 1px);
+  }
+
+  .echo::after {
+    -webkit-text-stroke: 1.6px var(--color-electric);
+    clip-path: inset(45% 0 40% 0);
+    transform: translateX(16px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .echo::after {
+      animation: glitch 300ms steps(3) 400ms both;
+    }
+  }
+
+  @keyframes glitch {
+    0% {
+      clip-path: inset(10% 0 70% 0);
+      transform: translateX(-18px);
+    }
+    50% {
+      clip-path: inset(60% 0 20% 0);
+      transform: translateX(22px);
+    }
+  }
+</style>

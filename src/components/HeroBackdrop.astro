@@ -1,0 +1,103 @@
+---
+import Glyph from './Glyph.astro';
+
+const ticks = (count: number, from: number, span: number, r: number, minor: number, major: number) =>
+  Array.from({ length: count }, (_, i) => {
+    const a = from + (i / count) * span;
+    const r2 = i % 5 ? minor : major;
+    return { x1: r * Math.cos(a), y1: r * Math.sin(a), x2: r2 * Math.cos(a), y2: r2 * Math.sin(a) };
+  });
+
+const dialTicks = ticks(60, Math.PI / 2, Math.PI / 2, 330, 320, 308);
+const radarTicks = ticks(90, -Math.PI / 2, Math.PI / 2, 330, 338, 350);
+
+const marks = [
+  { kind: 'cross', class: 'right-[34%] top-[14%] size-7 text-ink' },
+  { kind: 'star', class: 'right-[9%] top-[46%] size-10 text-ink' },
+  { kind: 'star', class: 'left-[30%] bottom-[30%] size-6 text-electric' },
+  { kind: 'cross', class: 'right-[12%] bottom-[14%] size-7 text-electric' },
+] as const;
+---
+
+<div aria-hidden="true" class="pointer-events-none absolute inset-0">
+  <svg class="absolute top-0 left-0 w-[235px] fill-electric md:w-[470px]" viewBox="0 0 470 240">
+    <polygon points="0,0 380,0 356,22 132,22 104,50 34,50 34,200 0,234" />
+    <rect x="54" y="74" width="34" height="22" class="fill-ink" />
+    <g class="fill-ice">
+      <rect x="58" y="78" width="4" height="14" /><rect x="65" y="78" width="4" height="14" />
+      <rect x="72" y="78" width="12" height="6" /><rect x="72" y="86" width="12" height="6" />
+    </g>
+    <path d="M104 50V120H300L330 90H460" fill="none" class="stroke-electric" stroke-width="1.4" />
+    <circle cx="460" cy="90" r="4" />
+  </svg>
+
+  <svg class="absolute -top-[250px] -right-[250px] w-[400px] md:-top-[300px] md:-right-[240px] md:w-[680px]" viewBox="-340 -340 680 680">
+    <defs>
+      <pattern id="hero-dots" width="14" height="14" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="1.3" class="fill-electric" fill-opacity=".35" />
+      </pattern>
+    </defs>
+    <circle r="330" class="fill-electric-pale stroke-electric" fill-opacity=".7" stroke-width="2.5" />
+    <circle r="268" fill="none" class="stroke-electric-soft" stroke-dasharray="2 6" />
+    <circle r="210" fill="url(#hero-dots)" opacity=".7" />
+    <path d="M-290 160A330 330 0 0 0 -142 298" fill="none" class="stroke-electric" stroke-width="14" />
+    <g class="stroke-electric" stroke-width="1.4">
+      {dialTicks.map(t => <line {...t} />)}
+    </g>
+  </svg>
+
+  <svg class="absolute top-28 right-0 hidden w-[60px] fill-electric lg:block" viewBox="0 0 92 600">
+    <polygon points="92,0 92,600 0,600 0,480 32,448 32,200 0,168 0,44 44,0" />
+    <text x="66" y="70" transform="rotate(90 66 70)" class="fill-white font-mono" font-size="15" font-weight="800" letter-spacing="2">LOWER IS BETTER</text>
+    <text x="66" y="410" transform="rotate(90 66 410)" class="fill-electric-pale font-mono" font-size="12" letter-spacing="2">μs · B / op</text>
+  </svg>
+
+  <svg class="absolute -bottom-[260px] -left-[160px] w-[520px] opacity-60 [mask-image:linear-gradient(to_bottom,black_28%,transparent_44%)] md:-bottom-[520px] md:-left-[300px] md:w-[940px] md:opacity-100" viewBox="-470 -470 940 940">
+    <g class="stroke-electric" fill="none">
+      <circle r="470" stroke-opacity=".25" />
+      <circle r="400" stroke-opacity=".5" stroke-dasharray="1 7" />
+      <circle r="330" class="fill-electric" fill-opacity=".05" stroke-width="1.5" />
+      <circle r="250" stroke-opacity=".6" stroke-dasharray="14 6" />
+      <circle r="170" class="fill-electric-pale" stroke-width="1.5" />
+      <circle r="110" />
+      <circle r="60" class="fill-electric-soft" fill-opacity=".35" />
+      <path d="M-470 0A470 470 0 0 1 -332 -332" stroke-width="8" />
+      <path d="M120 -308A330 330 0 0 1 300 -137" stroke-width="5" />
+      <path d="M0 0L380 -390" stroke-width="1.2" />
+      <path d="M-200 -10L-130 -60L-60 -30L-40 -120L78 -80" stroke-width="1.6" />
+      <g stroke-width="1.2">{radarTicks.map(t => <line {...t} />)}</g>
+    </g>
+    <g class="radar-sweep">
+      <path d="M0 0L330 0A330 330 0 0 0 310.1 -112.9Z" class="fill-electric" fill-opacity=".12" />
+      <path d="M0 0L330 0" class="stroke-electric" stroke-width="1.4" />
+    </g>
+    <g class="fill-electric">
+      <circle cx="78" cy="-80" r="7" /><circle cx="160" cy="-164" r="11" /><circle cx="246" cy="-252" r="7" />
+      <circle cx="330" cy="-338" r="13" class="fill-electric-soft" /><circle cx="-60" cy="-30" r="9" class="fill-electric-soft" />
+      <circle cx="-40" cy="-120" r="6" />
+    </g>
+    <text x="-180" y="-200" class="fill-electric font-mono" font-size="11">AZ 042.7°</text>
+    <text x="200" y="-30" class="fill-electric font-mono" font-size="11">R 330 · LOCK</text>
+  </svg>
+
+  {marks.map(m => <Glyph kind={m.kind} class={`absolute hidden md:block ${m.class}`} />)}
+</div>
+
+<style>
+  .radar-sweep {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .radar-sweep {
+      animation: sweep 10s linear infinite;
+    }
+  }
+
+  @keyframes sweep {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
