@@ -22,3 +22,14 @@
 
   --clip-chamfer: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ice: #000000;
+    --color-ice-hi: #000000;
+    --color-ice-lo: #000000;
+    --color-electric-pale: #000000;
+    --color-ink: #ffffff;
+    --color-white: #000000;
+  }
+}
