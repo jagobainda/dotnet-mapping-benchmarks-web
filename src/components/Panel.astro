@@ -1,0 +1,24 @@
+---
+import Glyph from './Glyph.astro';
+
+interface Props {
+  tag: string;
+  meta?: string;
+  headingLevel?: 2 | 3;
+  class?: string;
+}
+
+const { tag, meta, headingLevel = 3, class: className } = Astro.props;
+const Heading = `h${headingLevel}` as const;
+---
+
+<div class:list={['relative border-[1.4px] border-electric bg-ice-hi/75 p-5 md:p-6', className]}>
+  <Glyph kind="cross" class="absolute -top-3.5 -right-3.5 size-7 text-ink" />
+  <div class="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1">
+    <Heading class="bg-ink px-2 py-0.5 text-sm font-semibold text-white">
+      <span aria-hidden="true">"</span>{tag}<span aria-hidden="true">"</span>
+    </Heading>
+    {meta && <span class="text-xs text-electric">{meta}</span>}
+  </div>
+  <slot />
+</div>

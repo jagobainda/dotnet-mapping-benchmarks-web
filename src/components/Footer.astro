@@ -1,31 +1,50 @@
 ---
 import { ArrowUpRight } from 'lucide-astro';
+
+const links = [
+  { label: 'View History (JSON)', href: 'https://cdn.jagoba.dev/dotnet-mapping-benchmarks/history.json' },
+  { label: 'Latest Run (JSON)', href: 'https://cdn.jagoba.dev/dotnet-mapping-benchmarks/last_result.json' },
+  { label: 'GitHub', href: 'https://github.com/jagobainda/dotnet-mapping-benchmarks-web' },
+];
+
+let seed = 5;
+const pixels = Array.from({ length: 64 }, (_, n) => {
+  seed = (seed * 16807) % 2147483647;
+  return seed / 2147483647 > 0.5 ? { x: Math.floor(n / 4) * 10, y: (n % 4) * 10 } : null;
+}).filter(p => p !== null);
 ---
 
-<footer class="border-t border-zinc-800 py-12 px-4">
-  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-    <div class="text-center md:text-left">
-      <p class="text-zinc-400 text-sm">
-        .NET Mapper Benchmarks — Open source benchmarking project
-      </p>
-    </div>
+<footer class="relative overflow-hidden px-4 pt-12 pb-28 md:px-10 md:pb-12">
+  <div class="mx-auto flex max-w-6xl flex-col gap-6 border-t-[1.4px] border-electric pt-8 md:flex-row md:items-center md:justify-between md:pr-96">
+    <p class="text-sm">
+      <span class="text-electric">//</span> .NET Mapper Benchmarks — Open source benchmarking project
+    </p>
 
-    <div class="flex items-center gap-4">
-      <a href="https://cdn.jagoba.dev/dotnet-mapping-benchmarks/history.json" target="_blank" rel="noopener noreferrer"
-        class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">
-        View History (JSON)
-      </a>
-      <span class="text-zinc-700">·</span>
-      <a href="https://cdn.jagoba.dev/dotnet-mapping-benchmarks/last_result.json" target="_blank" rel="noopener noreferrer"
-        class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">
-        Latest Run (JSON)
-      </a>
-      <span class="text-zinc-700">·</span>
-      <a href="https://github.com/jagobainda/dotnet-mapping-benchmarks-web" target="_blank" rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-300 transition-colors">
-        GitHub
-        <ArrowUpRight size={20} />
-      </a>
-    </div>
+    <ul class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+      {links.map(({ label, href }) => (
+        <li>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 underline decoration-electric decoration-[1.4px] underline-offset-4 transition-colors duration-150 ease-hud hover:bg-ink hover:text-white"
+          >
+            {label}
+            <ArrowUpRight size={16} />
+          </a>
+        </li>
+      ))}
+    </ul>
   </div>
+
+  <svg aria-hidden="true" class="absolute right-0 bottom-0 w-[260px] md:w-[360px]" viewBox="0 0 360 70">
+    <polygon points="0,70 0,32 32,0 360,0 360,70" class="fill-electric" />
+    <g class="fill-ink" transform="translate(60 18)">
+      <path d="M0 0L14 0L22 11L30 0L44 0L29 20L44 40L30 40L22 29L14 40L0 40L15 20Z" />
+      <path d="M50 0L64 0L72 11L80 0L94 0L79 20L94 40L80 40L72 29L64 40L50 40L65 20Z" />
+    </g>
+    <g class="fill-ice" transform="translate(170 18)">
+      {pixels.map(p => <rect x={p.x} y={p.y} width="8" height="8" />)}
+    </g>
+  </svg>
 </footer>

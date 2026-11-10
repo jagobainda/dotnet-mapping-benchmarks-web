@@ -1,0 +1,16 @@
+---
+interface Props {
+  kind: 'star' | 'cross';
+  class?: string;
+}
+
+const { kind, class: className } = Astro.props;
+---
+
+<svg aria-hidden="true" class={className} viewBox="-16 -16 32 32">
+  {kind === 'star' ? (
+    <path d="M0 -16C1.5 -4 4 -1.5 16 0C4 1.5 1.5 4 0 16C-1.5 4 -4 1.5 -16 0C-4 -1.5 -1.5 -4 0 -16Z" fill="currentColor" />
+  ) : (
+    <path d="M-11 0H11M0 -11V11" stroke="currentColor" stroke-width="2.4" />
+  )}
+</svg>

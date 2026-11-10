@@ -1,6 +1,6 @@
 # .NET Mapper Benchmarks — Web
 
-> A clean, minimal frontend to visualize performance benchmarks of popular .NET object mapping libraries.
+> A cyberpunk HUD-style frontend (light variant: electric blue + ink, Archivo + JetBrains Mono) to visualize performance benchmarks of popular .NET object mapping libraries.
 
 Live at **[benchmarks.jagoba.dev/dotnet-mappers](https://benchmarks.jagoba.dev/dotnet-mappers)**
 
